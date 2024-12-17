@@ -1,0 +1,143 @@
+## Passo a Passo: Como Funciona o Software de Consulta de Informações do YouTube
+
+Este documento explica o funcionamento do software desenvolvido em **Node.js** para buscar informações de um vídeo do YouTube e do canal que postou o vídeo, utilizando a **YouTube Data API v3**.
+
+---
+
+### 1. **Objetivo do Software**
+
+O software permite que o usuário informe um **link de vídeo do YouTube** e, em resposta, retorna:
+- Título do vídeo.
+- Número de visualizações do vídeo.
+- Número de curtidas do vídeo.
+- Nome do canal que postou o vídeo.
+- Quantidade de inscritos no canal.
+- Total de visualizações do canal.
+- Descrição do canal.
+
+Tudo isso é feito utilizando a **YouTube Data API v3** do Google.
+
+---
+
+### 2. **Requisitos**
+
+Antes de executar o software, certifique-se de ter:
+1. **Node.js** instalado na sua máquina.
+2. Uma conta no [Google Cloud Console](https://console.cloud.google.com/).
+3. Chave de API da **YouTube Data API v3** criada e configurada.
+4. Biblioteca `axios` e `dotenv` instaladas.
+
+Instale as dependências no terminal com:
+```bash
+npm install axios dotenv
+```
+
+Crie um arquivo **.env** e insira a chave da API:
+```plaintext
+YOUTUBE_API_KEY=SUA_CHAVE_DA_API
+```
+
+---
+
+### 3. **Funcionamento do Software**
+
+#### **Entrada do Usuário**
+- O usuário deve passar o link do vídeo do YouTube como argumento ao executar o software.
+
+Exemplo de execução:
+```bash
+node index.js "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+```
+
+O software aceita tanto links encurtados (`youtu.be/ID`) quanto links completos (`youtube.com/watch?v=ID`).
+
+#### **Extração do ID do Vídeo**
+- O software usa a função **`extractVideoId`** para extrair o ID do vídeo a partir do link.
+- Exemplo:
+  - Link: `https://www.youtube.com/watch?v=dQw4w9WgXcQ`
+  - ID Extraído: `dQw4w9WgXcQ`
+
+#### **Consulta à API**
+1. **Busca das informações do vídeo**:
+   - A função **`getVideoDetails`** chama o endpoint `videos.list` da YouTube Data API.
+   - Retorna detalhes do vídeo, como:
+     - Título
+     - Visualizações
+     - Curtidas
+     - Nome do Canal
+     - ID do Canal
+
+2. **Busca das informações do canal**:
+   - A função **`getChannelDetails`** chama o endpoint `channels.list` da API.
+   - Com base no **ID do Canal** obtido no passo anterior, retorna:
+     - Nome do Canal
+     - Número de inscritos
+     - Total de visualizações
+     - Descrição do Canal
+
+#### **Saída no Terminal**
+- O software exibe os resultados de forma organizada no terminal usando **console.table()**.
+
+**Exemplo de Saída:**
+```
+Detalhes do Vídeo:
+┌───────────────────────┬──────────────────────────────────────────────┐
+│ Título                │ Rick Astley - Never Gonna Give You Up        │
+│ Visualizações         │ 1603208183                                   │
+│ Curtidas              │ 18057568                                     │
+│ Canal                 │ Rick Astley                                  │
+└───────────────────────┴──────────────────────────────────────────────┘
+
+Detalhes do Canal:
+┌─────────────────────────┬────────────────────────────────────────────┐
+│ Nome do Canal           │ Rick Astley                                │
+│ Inscritos               │ 4210000                                    │
+│ Total de Visualizações  │ 2144131528                                 │
+│ Descrição do Canal      │ Never: The Autobiography -  Out now 📚     
+└─────────────────────────┴────────────────────────────────────────────┘
+```
+
+---
+
+### 4. **Resumo das Funções Principais**
+
+1. **extractVideoId(videoUrl):**
+   - Extrai o ID do vídeo a partir do link.
+
+2. **getVideoDetails(videoId):**
+   - Consulta a API para obter informações sobre o vídeo.
+
+3. **getChannelDetails(channelId):**
+   - Consulta a API para obter informações sobre o canal.
+
+4. **main():**
+   - Função principal que orquestra todo o processo, desde a entrada do link até a exibição dos resultados.
+
+---
+
+### 5. **Execução Passo a Passo**
+1. Abra o terminal.
+2. Navegue até o diretório onde o arquivo `index.js` está salvo.
+3. Execute o programa com o link do vídeo como argumento:
+   ```bash
+   node index.js "https://www.youtube.com/watch?v=ID_DO_VIDEO"
+   ```
+4. Veja as informações do vídeo e do canal no terminal.
+
+---
+
+### 6. **Possíveis Erros e Soluções**
+
+| **Erro**                             | **Solução**                                            |
+|--------------------------------------|--------------------------------------------------------|
+| URL inválida ou ID não encontrado    | Verifique se o link do vídeo está correto.             |
+| Chave de API inválida ou excedida    | Gere uma nova chave no Google Cloud.                   |
+| Nenhuma informação retornada da API  | Verifique se o vídeo ou canal está disponível público. |
+
+---
+
+7.Considerações Finais
+- Este software é uma ferramenta simples e eficiente para obter informações de vídeos e canais do YouTube.
+- Pode ser expandido para incluir mais funcionalidades, como exportar os dados para um arquivo JSON ou exibir em uma interface web.
+
+
